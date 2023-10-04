@@ -9,6 +9,8 @@ import {AppLayout} from './pages/AppLayout/AppLayout.jsx';
 import Login from './pages/Login/Login.jsx';
 import {CityList} from './components/CityList/CityList.jsx';
 import {CountryList} from './components/CountryList/CountryList.jsx';
+import City from './components/City/City.jsx';
+import Form from './components/Form/Form.jsx';
 
 const BASE_URL = 'http://localhost:3000';
 
@@ -48,10 +50,11 @@ export default function App() {
         <Route path="/pricing" element={<Pricing/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/app" element={<AppLayout/>}>
+          <Route path="cities/:id" element={<City/>}/>
           <Route index element={<CityList cities={cities} onLoading={isLoading}/>}/>
           <Route path="cities" element={<CityList cities={cities} onLoading={isLoading}/>}/>
           <Route path="countries" element={<CountryList cities={cities} onLoading={isLoading}/>}/>
-          <Route path="form" element={<p>Form</p>}/>
+          <Route path="form" element={<Form/>}/>
         </Route>
         <Route path="*" element={<PageNotFound/>}/>
       </Routes>
