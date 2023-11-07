@@ -1,7 +1,9 @@
 import styles from './City.module.css';
 import {useParams, useSearchParams} from 'react-router-dom';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import Spinner from '../Spinner/Spinner.jsx';
+import {useCities} from '../../contexts/CitiesContext.jsx';
+import {BackButton} from '../BackButton/BackButton.jsx';
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat('en', {
@@ -10,54 +12,25 @@ const formatDate = (date) =>
     year: 'numeric',
   }).format(new Date(date));
 
-
-const BASE_URL = 'http://localhost:3000';
-
 function City() {
-  // TEMP DATA
-  const currentCity = {
-    cityName: 'Lisbon',
-    emoji: '🇵🇹',
-    date: '2027-10-31T15:59:59.138Z',
-    notes: 'My favorite city so far!',
-  };
-
-  //states
-  const [city, setCity] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   //router params
   const {id} = useParams();
+
+  //context
+  const {currentCity, getCity, isLoading} = useCities();
 
   //query params
   const [searchParams, setSearchParams] = useSearchParams();
   const lat = searchParams.get('lat');
   const lng = searchParams.get('lng');
 
-
   useEffect(() => {
-
-    async function getCity() {
-
-      try {
-        setIsLoading(true);
-        const response = await fetch(`${BASE_URL}/cities/${id}`);
-        const data = await response.json();
-        setCity(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-
-    }
-
-    getCity();
-
+    getCity(id);
   }, [id]);
 
-  const {cityName, emoji, date, notes} = city;
+
+  const {cityName, emoji, date, notes} = currentCity;
 
   if(isLoading) return <Spinner/>;
 
@@ -99,6 +72,7 @@ function City() {
       </div>
 
       <div>
+        <BackButton/>
       </div>
     </div>
   );
