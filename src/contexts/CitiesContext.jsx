@@ -1,19 +1,16 @@
-import {createContext, useContext, useEffect, useState} from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
 
 const CitiesContext = createContext();
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = "http://localhost:3000";
 
-function CitiesProvider({children}) {
-
+function CitiesProvider({ children }) {
   //states
   const [cities, setCities] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentCity, setCurrentCity] = useState({});
 
   useEffect(() => {
-
     async function getCities() {
-
       try {
         setIsLoading(true);
         const response = await fetch(`${BASE_URL}/cities`);
@@ -25,11 +22,9 @@ function CitiesProvider({children}) {
       } finally {
         setIsLoading(false);
       }
-
     }
 
     getCities();
-
   }, []);
 
   async function getCity(id) {
@@ -46,19 +41,46 @@ function CitiesProvider({children}) {
     }
   }
 
+  async function addCity(newCity) {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${BASE_URL}/cities/`, {
+        method: "POST",
+        body: JSON.stringify(newCity),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setCities((prevState) => [...prevState, data]);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
-  return <CitiesContext.Provider value={{
-    cities, isLoading, currentCity, getCity,
-  }}>
-    {children}
-  </CitiesContext.Provider>;
+  return (
+    <CitiesContext.Provider
+      value={{
+        cities,
+        isLoading,
+        currentCity,
+        getCity,
+        addCity,
+      }}
+    >
+      {children}
+    </CitiesContext.Provider>
+  );
 }
 
 function useCities() {
   const context = useContext(CitiesContext);
-  if(context === undefined) throw new Error(
-    'CitiesContext was used outside of CitiesProvider scope.');
+  if (context === undefined)
+    throw new Error("CitiesContext was used outside of CitiesProvider scope.");
   return context;
 }
 
-export {CitiesProvider, useCities};
+export { CitiesProvider, useCities };
