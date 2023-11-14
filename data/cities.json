@@ -59,18 +59,6 @@
         "lng": "-49.37530517578126"
       },
       "id": 98443199
-    },
-    {
-      "cityName": "Mirassol",
-      "country": "Brazil",
-      "emoji": "🎫",
-      "date": "2023-11-13T21:03:23.080Z",
-      "notes": "The terrific city of São Paulo's northwest.",
-      "position": {
-        "lat": "-20.812606385754087",
-        "lng": "-49.49066162109376"
-      },
-      "id": 98443200
     }
   ]
 }
